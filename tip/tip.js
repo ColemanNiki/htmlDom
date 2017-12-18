@@ -1,5 +1,13 @@
 var content_url = 'https://trends.google.com/trends/hottrends/visualize/internal/data';
 var content = [];
+var color = ['rgb(250,187,5)','rgb(66,133,244)','rgb(234,67,53)','rgb(52,168,82)'];
+var color_count;
+var dom_list = [];
+
+function getRandColor(){
+    return color[Math.floor(Math.random()*4)];
+}
+
 function getContent(){
     $.ajax({
         url:'http://query.yahooapis.com/v1/public/yql',
@@ -19,4 +27,8 @@ function getContent(){
     })
 }
 
-getContent();
+window.onload = function(){
+    color_count = color.length;
+    getContent();
+};
+
