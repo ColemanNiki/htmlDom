@@ -91,7 +91,7 @@ function valChange(i, j) {
         else {
             nowDom.css('opacity',0);
             item.dom.first().addClass('finish');
-            var time = Math.floor(Math.random() * 500 + 1000);
+            var time = Math.floor(Math.random() * 500 + 500);
             time_ctrl[i][j] = setTimeout("valChange(" + i + "," + j + ")", time);
         }
         return;
