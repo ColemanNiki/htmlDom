@@ -30,7 +30,7 @@
     top:0;
     position: absolute;
     vertical-align: baseline;
-    transition: left 1s ease,top 1s ease;
+    transition: left 0.7s cubic-bezier(0.06,0.74,0.24,1),top 0.7s cubic-bezier(0.06,0.74,0.24,1);
 }
 
 .current{
@@ -44,6 +44,7 @@
     z-index:2;
 }
 
+
 .table{
     padding-left: 0.5em;
     padding-right: 0.5em;
@@ -53,10 +54,12 @@
 }
 
 .table-cell{
+    opacity: 0;
     display: table-cell;
     vertical-align: middle;
     color: white;
     word-break: normal;
+    transition: opacity 1s linear;        
 }
 
 .left{

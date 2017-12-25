@@ -7,8 +7,14 @@ var dom_list = [];
 var time_ctrl = [];
 var content_count = 0;
 
-function getRandomColor() {
-    return color[Math.floor(Math.random() * 4)];
+function getRandomColor(notColor) {
+    var res = color[Math.floor(Math.random() * 4)];
+    if(notColor && res == notColor){
+        return getRandomColor(notColor);
+    }
+    else{
+        return res;
+    }
 }
 
 function getRandomTitel() {
@@ -48,18 +54,13 @@ function valChange(i, j) {
     var item = dom_list[i][j];
 
     if (item.dom.first().hasClass('finish')) {
-        if(i == 1 && j == 1){
-            console.log(1);
-        }
         item.dom.first().removeClass('finish').removeClass('current').addClass(getRandomStyle() + ' moving');
-        time_ctrl[i][j] == setTimeout("valChange(" + i + "," + j + ")", 1500);
+        time_ctrl[i][j] == setTimeout("valChange(" + i + "," + j + ")", 800);
         return;
     }
 
     if (item.dom.first().hasClass('moving')) {
        
-        var newColor = getRandomColor();
-        
         item.dom.last().addClass('current').removeClass('wait').after('<div class="card"><span class="table"><span class="table-cell"></span></span></div>');
         item.dom.first().remove(); 
 
@@ -67,7 +68,9 @@ function valChange(i, j) {
         var dom = $(id).children('.card');
         dom_list[i][j].dom = dom;
         dom.first().addClass('current');
-        dom.last().addClass('wait').css('background-color', getRandomColor());
+        var random = getRandomColor(dom_list[i][j].color);
+        dom_list[i][j].color = random;
+        dom.last().addClass('wait').css('background-color', random);
         time_ctrl[i][j] = setTimeout("valChange(" + i + "," + j + ")", 200);
         dom_list[i][j].title = getRandomTitel();
         return;
@@ -76,18 +79,19 @@ function valChange(i, j) {
     if (item.dom.first().hasClass('current')) {
         var nowDom = item.dom.first().children('span').children('span');
         var nv = nowDom.text();
+        if(nv.length == 0){
+            nowDom.css('opacity',1);
+        }
         if (nv != item.title) {
-            if(!item.title){
-                console.log(item.title);
-            }
             nv += item.title[nv.length];
             nowDom.text(nv);
-            var time = Math.floor(Math.random() * 400 + 100);
+            var time = Math.floor(Math.random() * 500 + 150);
             time_ctrl[i][j] = setTimeout("valChange(" + i + "," + j + ")", time);
         }
         else {
+            nowDom.css('opacity',0);
             item.dom.first().addClass('finish');
-            var time = Math.floor(Math.random() * 200 + 1000);
+            var time = Math.floor(Math.random() * 500 + 1000);
             time_ctrl[i][j] = setTimeout("valChange(" + i + "," + j + ")", time);
         }
         return;
@@ -103,9 +107,12 @@ function initCell() {
             var id = '#' + i + '-' + j;
             var dom = $(id).children('.card');
             dom_list[i][j].dom = dom;
-            dom.first().addClass('current').css('background-color', getRandomColor());
-            dom.last().addClass('wait').css('background-color', getRandomColor());
+            var randColor = getRandomColor(null);
+            dom.first().addClass('current').css('background-color', randColor);
+            var otherColor = getRandomColor(randColor)
+            dom.last().addClass('wait').css('background-color', otherColor);
             dom_list[i][j].title = getRandomTitel();
+            dom_list[i][j].color = otherColor;
             time_ctrl[i][j] = null;
             valChange(i, j,300);
         }
