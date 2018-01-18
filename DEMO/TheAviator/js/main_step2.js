@@ -204,6 +204,7 @@ var AirPlane = function(){
   var geomEngine = new THREE.BoxGeometry(20,50,50,1,1,1);
   var matEngine = new THREE.MeshPhongMaterial({color:Colors.white, shading:THREE.FlatShading});
   var engine = new THREE.Mesh(geomEngine, matEngine);
+  engine.name = 'engine';
   engine.position.x = 50;
   engine.castShadow = true;
   engine.receiveShadow = true;
@@ -386,6 +387,34 @@ Sea.prototype.moveWaves = function (){
   sea.mesh.rotation.z += .005;
 }
 
+Ball = function(){
+  this.mesh = new THREE.Mesh(
+    new THREE.SphereGeometry(1,1),
+    new THREE.MeshLambertMaterial({color:0xff0000}),
+  )
+
+  var position = airplane.mesh.getObjectByName('engine').position;
+  console.log(position);
+  this.mesh.position.set(position.x,position.y,position.z);
+  scene.add(this.mesh);
+}
+
+var balls;
+
+Balls = function(){
+  this.balls = [];
+}
+
+function createBalls(){
+  balls = new Balls();
+}
+
+function createBall(){
+  var ball = new Ball();
+  return ball;
+}
+
+
 Cloud = function(){
   this.mesh = new THREE.Object3D();
   this.mesh.name = "cloud";
@@ -468,11 +497,13 @@ function normalize(v,vmin,vmax,tmin, tmax){
 
 function init(event){
   document.addEventListener('mousemove', handleMouseMove, false);
+  document.addEventListener('mousedown',handleMouseDown,false)
   createScene();
   createLights();
   createPlane();
   createSea();
   createSky();
+  createBalls();
   loop();
 }
 
@@ -484,6 +515,11 @@ function handleMouseMove(event) {
   var tx = -1 + (event.clientX / WIDTH)*2;
   var ty = 1 - (event.clientY / HEIGHT)*2;
   mousePos = {x:tx, y:ty};
+}
+
+function handleMouseDown(event){
+  var ball = createBall();
+  balls.balls.push(ball);
 }
 
 window.addEventListener('load', init, false);
